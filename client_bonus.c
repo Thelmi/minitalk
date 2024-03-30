@@ -1,16 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   client.c                                           :+:      :+:    :+:   */
+/*   client_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: thelmy <thelmy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/29 14:44:20 by thelmy            #+#    #+#             */
-/*   Updated: 2024/03/30 10:14:24 by thelmy           ###   ########.fr       */
+/*   Created: 2024/03/30 09:17:17 by thelmy            #+#    #+#             */
+/*   Updated: 2024/03/30 09:17:20 by thelmy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
+
+static void	res_handler(int sig)
+{
+	if (sig)
+		write (1, "recieved\n", 10);
+}
 
 static void	send_signal(int pid, char c)
 {
@@ -50,8 +56,11 @@ static int	check(char *str)
 int	main(int ac, char **av)
 {
 	int					i;
+	struct sigaction	sa1;
 
 	i = 0;
+	sa1.sa_handler = &res_handler;
+	sigaction(SIGUSR1, &sa1, NULL);
 	if (ac == 3)
 	{
 		if (check(av[1]) || ft_atoi(av[1]) <= 0 || ft_atoi(av[1]) > INT_MAX)
